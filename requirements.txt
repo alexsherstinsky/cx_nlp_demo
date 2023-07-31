@@ -1,0 +1,8 @@
+joblib
+pandas
+datasets
+sentence_transformers
+setfit
+openai
+scikit-learn
+wandb
