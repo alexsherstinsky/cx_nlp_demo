@@ -20,6 +20,7 @@ def df_pandas_with_non_printable_characters() -> pd.DataFrame:
     return test_df
 
 
+@pytest.mark.unit
 def test_remove_non_printable_characters(df_pandas_with_non_printable_characters: pd.DataFrame):
     data_cleaner = DataCleaner(dataframe=df_pandas_with_non_printable_characters)
     data_cleaner.remove_non_printable_characters(column_names=["col1", "col2"])
