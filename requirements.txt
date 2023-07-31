@@ -1,8 +1,9 @@
-joblib
-pandas
 datasets
+joblib
+openai
+pandas
+pytest
+scikit-learn
 sentence_transformers
 setfit
-openai
-scikit-learn
 wandb

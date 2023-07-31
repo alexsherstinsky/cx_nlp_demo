@@ -1,25 +1,26 @@
 from __future__ import annotations
 
-import pathlib
 import pandas as pd
 
 import re
 
 
-class DataLoaderAndCleaner:
+class DataCleaner:
     def __init__(
         self,
-        csv_path: pathlib.Path,
-        delimiter: str = ",",
-        encoding: str = "latin1",
+        dataframe: pd.DataFrame,
     ) -> None:
         """
-        The DataLoaderAndCleaner
+        The DataCleaner
 
         Args:
-            csv_path: path to CSV file containing raw data
+            dataframe: Pandas DataFrame containing raw data
         """
-        self._dataframe: pd.DataFrame = pd.read_csv(csv_path, delimiter=delimiter, encoding=encoding)
+        self._dataframe: pd.DataFrame = dataframe.copy()
+
+    @property
+    def dataframe(self) -> pd.DataFrame:
+        return self._dataframe
 
     def remove_nulls(self) -> None:
         self._dataframe.dropna(inplace=True)
