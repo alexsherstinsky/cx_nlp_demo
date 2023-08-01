@@ -11,8 +11,8 @@ if TYPE_CHECKING:
 
 
 class OpenAIProvider:
-    def __init__(self, api_key: str = "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"):
-        self._api_key = api_key
+    def __init__(self, api_key: str = "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") -> None:
+        self._api_key: str = api_key
 
     @staticmethod
     def get_sentiment(self, input_text: str) -> dict:
