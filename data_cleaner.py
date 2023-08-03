@@ -4,6 +4,11 @@ import pandas as pd
 
 import re
 
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
 
 class DataCleaner:
     def __init__(

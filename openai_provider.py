@@ -6,6 +6,11 @@ from typing import Generator, Any, TYPE_CHECKING
 
 import openai
 
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
 if TYPE_CHECKING:
     from openai.openai_object import OpenAIObject
 
