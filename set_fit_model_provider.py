@@ -10,7 +10,7 @@ from setfit import SetFitModel, SetFitTrainer
 import logging
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logging.basicConfig(level=logging.INFO)
 
 
 class SetFitModelProvider:
@@ -47,6 +47,7 @@ class SetFitModelProvider:
             num_iterations=20, # Number of text pairs to generate for contrastive learning
             num_epochs=1, # Number of epochs to use for contrastive learning
         )
+        logger.info(f'Training model "{self._model_name}".')
         trainer.train()
 
         self._trainer = trainer
@@ -57,17 +58,28 @@ class SetFitModelProvider:
 
     def persist_model(self) -> None:
         if self._trainer is None:
-            raise ValueError(f'Unable to persist model "{self._model_name}" since it has not yet been trained.')
+            raise ValueError(f'Unable to persist model "{self._model_name}", since it has not yet been trained.')
 
-        joblib.dump(self._trainer, self._model_name)
+        joblib.dump(self._trainer, f"{self._model_name}.joblib")
 
-    def load_model(self) -> None:
-        if self._trainer is not None:
+    def load_model(self, reload: bool = False) -> None:
+        do_load: bool
+        if self._trainer is None:
+            logger.info(f'Loading model "{self._model_name}" from most recently saved version.')
+            do_load = True
+        elif reload:
             logger.info(f'Reloading model "{self._model_name}" from most recently saved version.')
+            do_load = True
+        else:
+            do_load = False
 
-        self._trainer = joblib.load(self._model_name)
+        if do_load:
+            self._trainer = joblib.load(f"{self._model_name}.joblib")
 
     def predict(self, text: str) -> int:
+        if self._trainer is None:
+            raise ValueError(f'Unable to use model "{self._model_name}" for inference, since it has not yet been trained.')
+
         return self._trainer.model.predict([text])[0]
 
     def _get_train_and_test_datasets(self) -> tuple[Dataset, Dataset]:
