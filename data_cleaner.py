@@ -42,3 +42,6 @@ class DataCleaner:
         self._dataframe["text"] = self._dataframe[source_text_column_name]
         self._dataframe["label"] = self._dataframe[source_label_column_name]
 
+    def convert_label_column_to_binary(self, threshold: int = 3) -> None:
+        self._dataframe["label"] = self._dataframe["label"].apply(lambda x: 1 if x > threshold else 0)
+
