@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 
-class DatasetBuilder:
+class DataPartitioner:
     DEFAULT_RANDOM_STATE: int = 200
 
     def __init__(

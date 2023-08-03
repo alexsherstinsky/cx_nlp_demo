@@ -5,7 +5,7 @@ import pandas as pd
 import logging
 
 from data_cleaner import DataCleaner
-from dataset_builder import DatasetBuilder
+from data_partitioner import DataPartitioner
 from set_fit_model_provider import SetFitModelProvider
 
 logger = logging.getLogger(__name__)
@@ -25,7 +25,7 @@ def run_flipkart_demo(csv_file_path: str, delimiter: str = ",", encoding: str = 
     data_cleaner.create_standard_text_and_label_columns(source_text_column_name="Summary", source_label_column_name="Rate")
     data_cleaner.convert_label_column_to_binary()
 
-    dataset_builder: DatasetBuilder = DatasetBuilder(dataframe=data_cleaner.dataframe)
+    dataset_builder: DataPartitioner = DataPartitioner(dataframe=data_cleaner.dataframe)
 
     df_eval: pd.DataFrame = dataset_builder.evaluation_dataframe
 
