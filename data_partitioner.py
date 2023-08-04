@@ -58,14 +58,8 @@ class DataPartitioner:
         df_train: pd.DataFrame = pd.concat([df_train_negatives, df_train_positives])
 
         df_test_negatives: pd.DataFrame = df_negatives.sample(n=num_test_samples, random_state=random_state)
-        # TODO: <Alex>ALEX</Alex>
-        # df_negatives: pd.DataFrame = df_negatives.drop(df_test_negatives.index)
-        # TODO: <Alex>ALEX</Alex>
 
         df_test_positives: pd.DataFrame = df_positives.sample(n=num_test_samples, random_state=random_state)
-        # TODO: <Alex>ALEX</Alex>
-        # df_positives: pd.DataFrame = df_positives.drop(df_test_positives.index)
-        # TODO: <Alex>ALEX</Alex>
 
         df_test: pd.DataFrame = pd.concat([df_test_negatives, df_test_positives])
 

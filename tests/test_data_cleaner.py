@@ -1,9 +1,6 @@
 import pandas as pd
 
 import pytest
-# TODO: <Alex>ALEX</Alex>
-# from unittest import mock
-# TODO: <Alex>ALEX</Alex>
 
 from data_cleaner import DataCleaner
 
