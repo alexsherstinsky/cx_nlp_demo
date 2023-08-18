@@ -131,7 +131,7 @@ if __name__ == "__main__":
 
     # TODO: <Alex>ALEX-Cleanup</Alex>
     # Obtain data file (stored in CSV format) from command line.
-    csv_file_path_str: str = sys.argv[1] if len(sys.argv) >= 2 else None  # noqa PLR2004  (use a constant instead of explicit number)
+    csv_file_path_str: str = sys.argv[1] if len(sys.argv) >= 2 else None
     # TODO: <Alex>ALEX</Alex>
     flipkart_demo = FlipkartDemo()
 
