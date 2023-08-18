@@ -1,0 +1,164 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+# uncomment to enable pep517 after versioneer problem is fixed.
+# https://github.com/python-versioneer/python-versioneer/issues/193
+# build-backend = "setuptools.build_meta"
+
+[tool.black]
+target-version = ["py38", "py39", "py310", "py311"]
+extend_excludes = '''
+(
+    | tests/.*.fixture
+)
+'''
+
+[tool.isort]
+profile = "black"
+skip_gitignore = true
+extend_skip_glob = ['venv/*']
+
+[tool.mypy]
+python_version = "3.8"
+plugins = ["pydantic.mypy"]
+files = [
+]
+warn_unused_configs = true
+ignore_missing_imports = true
+# TODO: change this to 'normal' once we have 'full' type coverage
+follow_imports = 'silent'
+warn_redundant_casts = true
+show_error_codes = true
+enable_error_code = [
+    'ignore-without-code'
+]
+# The following list of codes are globally ignored, do not add to this list
+disable_error_code = [
+    # annotation-unchecked are 'warning notes', not errors and won't cause mypy to fail
+    # but it does create a lot of noise in the CI mypy step.
+    # https://mypy-lang.blogspot.com/2022/11/mypy-0990-released.html
+    'annotation-unchecked'
+    ]
+exclude = [
+]
+
+[[tool.mypy.overrides]]
+disable_error_code = [
+    'assignment',  # cannot assign NotImported to a ModuleType
+]
+
+[tool.pydantic-mypy]
+# https://pydantic-docs.helpmanual.io/mypy_plugin/#plugin-settings
+init_typed = true
+warn_required_dynamic_aliases = true
+warn_untyped_fields = true
+
+[tool.ruff]
+target-version = "py38"
+line-length = 88
+select = [
+    # https://beta.ruff.rs/docs/rules/#pyflakes-f
+    "F", # Pyflakes
+    # https://beta.ruff.rs/docs/rules/#pycodestyle-e-w
+    "E", # pycodestyle
+    "W", # Warning
+    # https://beta.ruff.rs/docs/rules/#flake8-comprehensions-c4
+    # https://beta.ruff.rs/docs/rules/#mccabe-c90
+    "C", # Complexity (mccabe+) & comprehensions
+    # https://beta.ruff.rs/docs/rules/#pyupgrade-up
+    "UP", # pyupgrade
+    # https://beta.ruff.rs/docs/rules/#isort-i
+    "I", # isort
+    # https://beta.ruff.rs/docs/rules/#flake8-type-checking-tch
+    "TCH", # flake8-type-checking-tch
+    # https://beta.ruff.rs/docs/rules/#flake8-tidy-imports-tid
+    "TID", # flake8-tidy-imports
+    # https://beta.ruff.rs/docs/rules/#flake8-pyi-pyi
+    "PYI", # flake8-pyi - type stub files
+    # https://beta.ruff.rs/docs/rules/#flake8-use-pathlib-pth
+    "PTH", # use-pathlib - use pathlib for os.path and glob operations
+    # https://beta.ruff.rs/docs/rules/#flake8-bugbear-b
+    "B", # bugbear - common python bugs & design issues
+    # https://beta.ruff.rs/docs/rules/#flake8-datetimez-dtz
+    "DTZ", # flake8-datetimez-dtz - prevent use of tz naive datetimes
+    # https://beta.ruff.rs/docs/rules/#pylint-pl
+    "PL", # pylint
+    # https://beta.ruff.rs/docs/rules/unused-noqa/
+    "RUF100", # unused-noqa
+]
+ignore = [
+    # https://beta.ruff.rs/docs/rules/#pyflakes-f
+    "F842", # variable annotated but unused # TODO enable
+    # https://beta.ruff.rs/docs/rules/#pycodestyle-e-w
+    "E501", # line-length # TODO: too many violations
+    "E402", # module level import not at top of file
+    # https://beta.ruff.rs/docs/rules/#flake8-comprehensions-c4
+    "C400", # TODO enable
+    "C408", # TODO enable
+    "C409", # TODO enable
+    "C413", # TODO enable
+    "C414", # TODO enable
+    "C416", # TODO enable
+    "C417", # TODO enable
+    # https://beta.ruff.rs/docs/rules/#pyupgrade-up
+    "UP006", # use-pep585-annotation
+    "UP007", # use-pep604-annotation
+    # https://beta.ruff.rs/docs/rules/#flake8-type-checking-tch
+    # minimal cost for standard lib imports; keep this disabled
+    "TCH003", # typing-only-standard-library-import
+    # gives false positives if we use try imports and type-checking import
+    "TCH004", # runtime-import-in-type-checking-block
+    "TID252",  # Relative imports from parent modules are banned
+    # https://beta.ruff.rs/docs/rules/#flake8-use-pathlib-pth
+    "PTH123", # pathlib-open - this would force pathlib usage anytime open or with open was used.
+    # https://beta.ruff.rs/docs/rules/#flake8-pyi-pyi
+    "PYI053", # string-or-bytes-too-long - causes mypy to fail on some of our type stubs
+    "PYI054",  # numeric-literal-too-long - causes mypy to fail on some of our type stubs
+    # https://beta.ruff.rs/docs/rules/#flake8-bugbear-b
+    # TODO: enable these
+    "B904", # raise-without-from-inside-except
+    "B028", # no-explicit-stacklevel - https://beta.ruff.rs/docs/rules/no-explicit-stacklevel/
+    "B007", # unused-loop-control-variable
+    "B009", # get-attr-with-constant
+]
+extend-exclude = [
+]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = [
+    "F401",  # unused import
+    "F403",  # star imports
+]
+
+[tool.ruff.flake8-type-checking]
+# pydantic models use annotations at runtime
+runtime-evaluated-base-classes = [
+    # NOTE: ruff is unable to detect that these are subclasses of pydantic.BaseModel
+    "pydantic.BaseModel",
+]
+runtime-evaluated-decorators = [
+    "pydantic.dataclasses.dataclass",
+]
+
+[tool.ruff.mccabe]
+max-complexity = 15
+
+[tool.ruff.pydocstyle]
+convention = "google"
+
+[tool.ruff.flake8-tidy-imports]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+]
+
+junit_family="xunit2"
+markers = [
+]
+testpaths = "tests"
+
+# use `pytest-mock` drop-in replacement for `unittest.mock`
+# https://pytest-mock.readthedocs.io/en/latest/configuration.html#use-standalone-mock-package
+mock_use_standalone_module = false
+# https://docs.pytest.org/en/7.1.x/how-to/logging.html#how-to-manage-logging
+# uncomment to adjust captured log levels
+# log_level = "info"
