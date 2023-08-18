@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import pandas as pd
-
 import logging
+
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -29,7 +29,7 @@ class DataPartitioner:
         The order is important, since rows are deleted from the original dataframe upon every operation.  Hence, the
         evaluation dataframe is obtained first, followed by obtaining the train and test dataframes (together).  These
         operations must be performed in the constructor so that the property methods can return their results.
-        
+
         TODO: In the future, all these dataframes can be packaged into a frozen dataclass object and returned together.
         """
         self._dataframe_evaluation: pd.DataFrame = self._get_evaluation_dataframe()

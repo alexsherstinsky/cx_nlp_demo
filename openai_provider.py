@@ -1,12 +1,10 @@
 from __future__ import annotations
 
+import logging
 import re
-
-from typing import Generator, Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Generator
 
 import openai
-
-import logging
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

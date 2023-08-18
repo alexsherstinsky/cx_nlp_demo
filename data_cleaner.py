@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-import pandas as pd
-
-import re
-
 import logging
+import re
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)

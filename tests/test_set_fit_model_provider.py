@@ -1,7 +1,7 @@
-import pytest
 from unittest import mock
 
 import pandas as pd
+import pytest
 
 from set_fit_model_provider import SetFitModelProvider
 

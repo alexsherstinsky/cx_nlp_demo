@@ -1,16 +1,15 @@
 from __future__ import annotations
 
 import dataclasses
+import logging
 import pathlib
 
 import pandas as pd
-
-import logging
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
 from data_cleaner import DataCleaner
 from data_partitioner import DataPartitioner
 from set_fit_model_provider import SetFitModelProvider
-from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -132,7 +131,7 @@ if __name__ == "__main__":
 
     # TODO: <Alex>ALEX-Cleanup</Alex>
     # Obtain data file (stored in CSV format) from command line.
-    csv_file_path_str: str = sys.argv[1] if len(sys.argv) >= 2 else None
+    csv_file_path_str: str = sys.argv[1] if len(sys.argv) >= 2 else None  # noqa PLR2004  (use a constant instead of explicit number)
     # TODO: <Alex>ALEX</Alex>
     flipkart_demo = FlipkartDemo()
 

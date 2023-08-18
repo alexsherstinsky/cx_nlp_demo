@@ -1,13 +1,15 @@
 from __future__ import annotations
 
-import joblib
-import pandas as pd
+import logging
+from typing import TYPE_CHECKING
 
+import joblib
 from datasets import Dataset
 from sentence_transformers.losses import CosineSimilarityLoss
 from setfit import SetFitModel, SetFitTrainer
 
-import logging
+if TYPE_CHECKING:
+    import pandas as pd
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)

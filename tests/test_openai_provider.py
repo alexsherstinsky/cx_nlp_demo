@@ -1,6 +1,6 @@
-import pytest
 from unittest import mock
 
+import pytest
 from openai.openai_object import OpenAIObject
 
 from openai_provider import OpenAIProvider
