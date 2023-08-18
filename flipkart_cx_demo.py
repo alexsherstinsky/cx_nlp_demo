@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import dataclasses
+import pathlib
 
 import pandas as pd
 
@@ -26,7 +27,7 @@ class PerformanceMetrics:
 
 class FlipkartDemo:
     @staticmethod
-    def run_flipkart_demo(csv_file_path: str, delimiter: str = ",", encoding: str = "latin1") -> pd.DataFrame:
+    def run_flipkart_demo(csv_file_path: pathlib.Path, delimiter: str = ",", encoding: str = "latin1") -> pd.DataFrame:
         df_original: pd.DataFrame = pd.read_csv(csv_file_path, delimiter=delimiter, encoding=encoding)
 
         data_cleaner: DataCleaner = DataCleaner(dataframe=df_original)
@@ -38,7 +39,7 @@ class FlipkartDemo:
 
         dataset_builder: DataPartitioner = DataPartitioner(dataframe=data_cleaner.dataframe)
 
-        df_eval: pd.DataFrame = dataset_builder.evaluation_dataframe
+        df_evaluation: pd.DataFrame = dataset_builder.evaluation_dataframe
 
         df_train: pd.DataFrame
         df_test: pd.DataFrame
@@ -55,15 +56,15 @@ class FlipkartDemo:
 
         try:
             set_fit_model_provider.load_model()
-        except FileNotFoundError as e:
+        except FileNotFoundError:
             metrics: dict[str, float] = set_fit_model_provider.train()
             logger.info(f'Evaluating trained model "{model_name}": {metrics}.')
             set_fit_model_provider.persist_model()
 
         # Use the SetFit model to predict
-        df_eval["setfit"] = df_eval["text"].apply(lambda x: int(set_fit_model_provider.predict(x)))
+        df_evaluation["setfit"] = df_evaluation["text"].apply(lambda x: int(set_fit_model_provider.predict(x)))
 
-        return df_eval
+        return df_evaluation
 
     @staticmethod
     def get_performance_metrics(name: str, df_evaluation: pd.DataFrame, truth_label: str, prediction_label: str) -> PerformanceMetrics:
@@ -84,11 +85,11 @@ if __name__ == "__main__":
     import sys
 
     # TODO: <Alex>ALEX-Cleanup</Alex>
-    csv_file_path: str = sys.argv[1] if len(sys.argv) >= 2 else None
+    csv_file_path_str: str = sys.argv[1] if len(sys.argv) >= 2 else None
     # TODO: <Alex>ALEX</Alex>
     flipkart_demo = FlipkartDemo()
 
-    df_eval: pd.DataFrame = flipkart_demo.run_flipkart_demo(csv_file_path=csv_file_path)
+    df_eval: pd.DataFrame = flipkart_demo.run_flipkart_demo(csv_file_path=pathlib.Path(csv_file_path_str))
 
     performance_metrics: PerformanceMetrics
 
