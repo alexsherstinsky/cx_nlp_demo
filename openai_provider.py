@@ -34,7 +34,9 @@ If the opinion message contains praise, appreciation, gratitude, and other favor
 if the mood in the text is negative, not advising other users to get this product, or complaining, even displaying anger, then the sentiment is poor (output is 0).
 """
 
-        annotation = "Each message begins with the product name and ends on the customer feedback.\n"
+        # TODO: <Alex>ALEX -- saving the next line for a later use.</Alex>
+        # annotation = "Each message begins with the product name and ends on the customer feedback.\n"
+        # TODO: <Alex>ALEX</Alex>
 
         task = "The goal is to determine whether or not the opinion is favorable."
 

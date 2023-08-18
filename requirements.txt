@@ -4,6 +4,7 @@ openai
 pandas
 pytest
 scikit-learn
+ruff==0.0.271
 sentence_transformers
 setfit
 wandb
