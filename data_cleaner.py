@@ -11,16 +11,17 @@ logging.basicConfig(level=logging.INFO)
 
 
 class DataCleaner:
+    """
+    The DataCleaner class contains methods for cleaning/conditioning the original dataframe using heuristics.
+
+    Args:
+        dataframe: Pandas DataFrame containing raw data
+    """
+
     def __init__(
         self,
         dataframe: pd.DataFrame,
     ) -> None:
-        """
-        The DataCleaner
-
-        Args:
-            dataframe: Pandas DataFrame containing raw data
-        """
         self._dataframe: pd.DataFrame = dataframe.copy()
 
     @property

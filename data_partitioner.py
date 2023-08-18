@@ -9,20 +9,29 @@ logging.basicConfig(level=logging.INFO)
 
 
 class DataPartitioner:
+    """
+    The DataPartitioner class contains methods for splitting the original dataframe into the non-overlapping
+    dataframes: train, test, and evaluation.
+
+    Args:
+        dataframe: Pandas DataFrame containing raw data
+    """
+
     DEFAULT_RANDOM_STATE: int = 200
 
     def __init__(
         self,
         dataframe: pd.DataFrame,
     ) -> None:
-        """
-        The DatasetBuilder
-
-        Args:
-            dataframe: Pandas DataFrame containing raw data
-        """
         self._dataframe: pd.DataFrame = dataframe.copy()
 
+        """
+        The order is important, since rows are deleted from the original dataframe upon every operation.  Hence, the
+        evaluation dataframe is obtained first, followed by obtaining the train and test dataframes (together).  These
+        operations must be performed in the constructor so that the property methods can return their results.
+        
+        TODO: In the future, all these dataframes can be packaged into a frozen dataclass object and returned together.
+        """
         self._dataframe_evaluation: pd.DataFrame = self._get_evaluation_dataframe()
 
         self._dataframe_train: pd.DataFrame
