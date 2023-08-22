@@ -156,6 +156,12 @@ filterwarnings = [
 
 junit_family="xunit2"
 markers = [
+    "big: mark tests that don't have external dependencies but aren't unit tests",
+    "e2e: mark test as an end-to-end (E2E) test.",
+    "integration: mark test as an integration test.", 
+    "slow: mark tests taking longer than 1 second.",
+    "unit: mark a test as a unit test.",
+    "pyarrow: mark a test as PyArrow-dependent.",
 ]
 testpaths = "tests"
 
