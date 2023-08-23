@@ -14,13 +14,22 @@ if TYPE_CHECKING:
 
 
 class OpenAIProvider:
+    """
+    The OpenAIProvider class is a wrapper around the OpenAI ChatCompletion.create() method and processing its output.
+    It initializes the openai library with the api_key and provide a public get_sentiment() method to handle text input.
+    """
     def __init__(self, api_key: str = "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") -> None:
         self._api_key: str = api_key
 
-    @staticmethod
     def get_sentiment(self, input_text: str) -> dict:
         """
-        Create a prompt based on input_text and use it to query OpenAI API to return sentiment values (1 or 0) -- good/bad opinion about the product.
+        Create a prompt based on input_text and use it to query OpenAI API to return sentiment values ("0" or "1") -- good/bad opinion about the product.
+
+        Args:
+            input_text: Input text to be incorporated into the classification instruction prompt to be passed to OpenAI.
+
+        Returns:
+            Dictionary containing a copy of the prompt and the sentiment ("0": "negative" or "1": "positive") response.
         """
         format_directive = "Respond in the JSON format: {{'response': sentiment_classification}}."
 
@@ -47,7 +56,7 @@ if the mood in the text is negative, not advising other users to get this produc
 
     def _query_openai(self, prompt: str) -> dict:
         """
-        Given a prompt, return sentiment values (0 or 1) -- opinion about the product (positive/negative) -- in the JSON format (the outputs will have values "0" or "1").
+        Given a prompt, return sentiment values -- opinion about the product (positive/negative) -- in the JSON format (the outputs will have values "0" or "1").
         """
         self._ensure_openai_api_key_is_set()
 
