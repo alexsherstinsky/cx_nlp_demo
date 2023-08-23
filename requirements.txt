@@ -4,6 +4,7 @@ joblib
 openai
 pandas
 pytest
+pytest_mock
 scikit-learn
 ruff==0.0.271
 sentence_transformers
