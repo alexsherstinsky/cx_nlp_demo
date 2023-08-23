@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any, Generator
 import openai
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logging.basicConfig(level=logging.INFO)
 
 if TYPE_CHECKING:
     from openai.openai_object import OpenAIObject
