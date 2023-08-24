@@ -174,4 +174,6 @@ if __name__ == "__main__":
         truth_label="label",
         prediction_label="setfit",
     )
-    print(f"\n[ALEX_TEST] [MAIN] PERFORMANCE_METRICS_SETFIT_TO_RATING:\n{performance_metrics} ; TYPE: {str(type(performance_metrics))}")
+    print(
+        f"\n[ALEX_TEST] [MAIN] PERFORMANCE_METRICS_SETFIT_TO_RATING:\n{performance_metrics} ; TYPE: {str(type(performance_metrics))}"
+    )
