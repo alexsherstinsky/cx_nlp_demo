@@ -20,7 +20,7 @@ class OpenAIProvider:
     It initializes the openai library with the api_key and provide a public get_sentiment() method to handle text input.
     """
 
-    def __init__(self, api_key: str = os.environ["OPENAI_API_KEY"]) -> None:
+    def __init__(self, api_key: str = os.environ.get("OPENAI_API_KEY")) -> None:
         self._api_key: str = api_key
 
     def get_sentiment(self, input_text: str) -> dict:
