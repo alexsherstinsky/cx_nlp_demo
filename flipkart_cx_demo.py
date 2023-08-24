@@ -20,6 +20,7 @@ class PerformanceMetrics:
     """
     Performance metrics (precision, recall, f1_score, accuracy) for named predictions vs. ground truth evaluation.
     """
+
     name: str
     precision: float
     recall: float
@@ -29,7 +30,9 @@ class PerformanceMetrics:
 
 class FlipkartDemo:
     @staticmethod
-    def run_flipkart_demo(csv_file_path: pathlib.Path, delimiter: str = ",", encoding: str = "latin1") -> pd.DataFrame:
+    def run_flipkart_demo(
+        csv_file_path: pathlib.Path, delimiter: str = ",", encoding: str = "latin1"
+    ) -> pd.DataFrame:
         """
         Runs main logic of the experiment:
             1) Read in https://www.kaggle.com/datasets/mansithummar67/flipkart-product-review-dataset (in CSV format).
@@ -51,21 +54,29 @@ class FlipkartDemo:
         Returns:
             Evaluation dataframe with predictions from running inference on "text" column by several classifiers.
         """
-        df_original: pd.DataFrame = pd.read_csv(csv_file_path, delimiter=delimiter, encoding=encoding)
+        df_original: pd.DataFrame = pd.read_csv(
+            csv_file_path, delimiter=delimiter, encoding=encoding
+        )
 
         # Clean original dataset.
         data_cleaner: DataCleaner = DataCleaner(dataframe=df_original)
         data_cleaner.remove_nulls()
-        data_cleaner.remove_non_printable_characters(column_names=["ProductName", "Summary"])
+        data_cleaner.remove_non_printable_characters(
+            column_names=["ProductName", "Summary"]
+        )
         data_cleaner.retain_numeric_rows_for_column(column_name="Rate")
 
         # Use "Summary" column as "text" and "Rate" column as "label" (these standard attribute names can be made customizable in the future).
-        data_cleaner.create_standard_text_and_label_columns(source_text_column_name="Summary", source_label_column_name="Rate")
+        data_cleaner.create_standard_text_and_label_columns(
+            source_text_column_name="Summary", source_label_column_name="Rate"
+        )
         # For binary classification purposes, convert 5-star "Rate" ("label") column entries to 0 and 1 (default threshold is 3; this can be experimented with in the future).
         data_cleaner.convert_label_column_to_binary()
 
         # Partition the cleaned dataframe into train, test, and evaluation datasets.
-        dataset_builder: DataPartitioner = DataPartitioner(dataframe=data_cleaner.dataframe)
+        dataset_builder: DataPartitioner = DataPartitioner(
+            dataframe=data_cleaner.dataframe
+        )
 
         # Obtain train and test datasets (non-overlapping parts of the overall cleaned dataframe).
         df_train: pd.DataFrame
@@ -95,12 +106,16 @@ class FlipkartDemo:
         df_evaluation: pd.DataFrame = dataset_builder.evaluation_dataframe
 
         # Use the SetFit model to predict.
-        df_evaluation["setfit"] = df_evaluation["text"].apply(lambda x: int(set_fit_model_provider.predict(x)))
+        df_evaluation["setfit"] = df_evaluation["text"].apply(
+            lambda x: int(set_fit_model_provider.predict(x))
+        )
 
         return df_evaluation
 
     @staticmethod
-    def get_performance_metrics(name: str, df_evaluation: pd.DataFrame, truth_label: str, prediction_label: str) -> PerformanceMetrics:
+    def get_performance_metrics(
+        name: str, df_evaluation: pd.DataFrame, truth_label: str, prediction_label: str
+    ) -> PerformanceMetrics:
         """
         Computes performance metrics (precision, recall, f1_score, accuracy) for predictions vs. ground truth.
 
@@ -113,10 +128,22 @@ class FlipkartDemo:
         Returns:
             PerformanceMetrics object containing performance metrics (precision, recall, f1_score, accuracy) for named predictions vs. ground truth evaluation.
         """
-        precision: float = precision_score(y_true=df_evaluation[truth_label].tolist(), y_pred=df_evaluation[prediction_label].tolist())
-        recall: float = recall_score(y_true=df_evaluation[truth_label].tolist(), y_pred=df_evaluation[prediction_label].tolist())
-        f1: float = f1_score(y_true=df_evaluation[truth_label].tolist(), y_pred=df_evaluation[prediction_label].tolist())
-        accuracy: float = accuracy_score(y_true=df_evaluation[truth_label].tolist(), y_pred=df_evaluation[prediction_label].tolist())
+        precision: float = precision_score(
+            y_true=df_evaluation[truth_label].tolist(),
+            y_pred=df_evaluation[prediction_label].tolist(),
+        )
+        recall: float = recall_score(
+            y_true=df_evaluation[truth_label].tolist(),
+            y_pred=df_evaluation[prediction_label].tolist(),
+        )
+        f1: float = f1_score(
+            y_true=df_evaluation[truth_label].tolist(),
+            y_pred=df_evaluation[prediction_label].tolist(),
+        )
+        accuracy: float = accuracy_score(
+            y_true=df_evaluation[truth_label].tolist(),
+            y_pred=df_evaluation[prediction_label].tolist(),
+        )
         return PerformanceMetrics(
             name=name,
             precision=precision,
@@ -135,13 +162,16 @@ if __name__ == "__main__":
     # TODO: <Alex>ALEX</Alex>
     flipkart_demo = FlipkartDemo()
 
-    df_eval: pd.DataFrame = flipkart_demo.run_flipkart_demo(csv_file_path=pathlib.Path(csv_file_path_str))
+    df_eval: pd.DataFrame = flipkart_demo.run_flipkart_demo(
+        csv_file_path=pathlib.Path(csv_file_path_str)
+    )
 
     performance_metrics: PerformanceMetrics
 
     performance_metrics = FlipkartDemo.get_performance_metrics(
         name="setfit_to_rating",
         df_evaluation=df_eval,
-        truth_label="label", prediction_label="setfit",
+        truth_label="label",
+        prediction_label="setfit",
     )
-    print(f'\n[ALEX_TEST] [MAIN] PERFORMANCE_METRICS_SETFIT_TO_RATING:\n{performance_metrics} ; TYPE: {str(type(performance_metrics))}')
+    print(f"\n[ALEX_TEST] [MAIN] PERFORMANCE_METRICS_SETFIT_TO_RATING:\n{performance_metrics} ; TYPE: {str(type(performance_metrics))}")

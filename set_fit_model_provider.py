@@ -82,7 +82,9 @@ class SetFitModelProvider:
         """
 
         if self._trainer is None:
-            raise ValueError(f'Unable to persist model "{self._model_name}", since it has not yet been trained.')
+            raise ValueError(
+                f'Unable to persist model "{self._model_name}", since it has not yet been trained.'
+            )
 
         joblib.dump(self._trainer, f"{self._model_name}.joblib")
 
@@ -96,10 +98,14 @@ class SetFitModelProvider:
 
         do_load: bool
         if self._trainer is None:
-            logger.info(f'Loading model "{self._model_name}" from most recently saved version.')
+            logger.info(
+                f'Loading model "{self._model_name}" from most recently saved version.'
+            )
             do_load = True
         elif reload:
-            logger.info(f'Reloading model "{self._model_name}" from most recently saved version.')
+            logger.info(
+                f'Reloading model "{self._model_name}" from most recently saved version.'
+            )
             do_load = True
         else:
             do_load = False
@@ -119,13 +125,19 @@ class SetFitModelProvider:
         """
 
         if self._trainer is None:
-            raise ValueError(f'Unable to use model "{self._model_name}" for inference, since it has not yet been trained.')
+            raise ValueError(
+                f'Unable to use model "{self._model_name}" for inference, since it has not yet been trained.'
+            )
 
         return self._trainer.model.predict([text])[0]
 
     def _get_train_and_test_datasets(self) -> tuple[Dataset, Dataset]:
-        train_ds: Dataset = Dataset.from_pandas(self._df_train, preserve_index=False).shuffle(seed=self._shuffle_seed)
-        test_ds: Dataset = Dataset.from_pandas(self._df_test, preserve_index=False).shuffle(seed=self._shuffle_seed)
+        train_ds: Dataset = Dataset.from_pandas(
+            self._df_train, preserve_index=False
+        ).shuffle(seed=self._shuffle_seed)
+        test_ds: Dataset = Dataset.from_pandas(
+            self._df_test, preserve_index=False
+        ).shuffle(seed=self._shuffle_seed)
 
         if self._selection_range is not None:
             train_ds = train_ds.select(self._selection_range)

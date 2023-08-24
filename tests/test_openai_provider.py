@@ -11,10 +11,7 @@ def openai_chat_completion_create_positive_response() -> OpenAIObject:
     class OpenAIChoiceStub:
         @property
         def message(self) -> dict:
-            return {
-                "role": "assistant",
-                "content": "{\"response\": 1}"
-            }
+            return {"role": "assistant", "content": '{"response": 1}'}
 
     class OpenAIObjectStub(OpenAIObject):
         @property
@@ -35,7 +32,9 @@ def openai_chat_completion_create_positive_response() -> OpenAIObject:
 @pytest.mark.unit
 def test__query_openai(openai_chat_completion_create_positive_response: OpenAIObject):
     openai_provider = OpenAIProvider()
-    format_directive = 'Respond in the JSON format: {{"response": sentiment_classification}}.'
+    format_directive = (
+        'Respond in the JSON format: {{"response": sentiment_classification}}.'
+    )
     input_text = "test_message the party was nice"
     prompt = f"{format_directive}\nMessage: {input_text}\nSentiment (0, 1):"
     with mock.patch(

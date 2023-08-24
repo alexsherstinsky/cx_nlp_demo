@@ -18,7 +18,10 @@ class OpenAIProvider:
     The OpenAIProvider class is a wrapper around the OpenAI ChatCompletion.create() method and processing its output.
     It initializes the openai library with the api_key and provide a public get_sentiment() method to handle text input.
     """
-    def __init__(self, api_key: str = "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") -> None:
+
+    def __init__(
+        self, api_key: str = "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"
+    ) -> None:
         self._api_key: str = api_key
 
     def get_sentiment(self, input_text: str) -> dict:
@@ -31,7 +34,9 @@ class OpenAIProvider:
         Returns:
             Dictionary containing a copy of the prompt and the sentiment ("0": "negative" or "1": "positive") response.
         """
-        format_directive = "Respond in the JSON format: {{'response': sentiment_classification}}."
+        format_directive = (
+            "Respond in the JSON format: {{'response': sentiment_classification}}."
+        )
 
         description = """\
 The following message will represent opinions about products by customers who own the given product.  While usually the comments are complete sentences, opinions \
@@ -61,7 +66,9 @@ if the mood in the text is negative, not advising other users to get this produc
         self._ensure_openai_api_key_is_set()
 
         try:
-            response: Generator[list | OpenAIObject | dict, Any, None] | list | OpenAIObject | dict = openai.ChatCompletion.create(
+            response: Generator[
+                list | OpenAIObject | dict, Any, None
+            ] | list | OpenAIObject | dict = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
                     {

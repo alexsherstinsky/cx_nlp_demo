@@ -14,7 +14,10 @@ class PandasDataFrameStub(pd.DataFrame):
 @pytest.mark.unit
 @mock.patch("setfit.SetFitTrainer.evaluate")
 @mock.patch("setfit.SetFitTrainer.train")
-def test_set_fit_trainer_train_and_evaluate_methods_are_called(mock_set_fit_trainer_train: mock.MagicMock, mock_set_fit_trainer_evaluate: mock.MagicMock):
+def test_set_fit_trainer_train_and_evaluate_methods_are_called(
+    mock_set_fit_trainer_train: mock.MagicMock,
+    mock_set_fit_trainer_evaluate: mock.MagicMock,
+):
     set_fit_model_provider = SetFitModelProvider(
         model_name="my_set_fit_model",
         df_train=PandasDataFrameStub(),
