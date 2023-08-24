@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import logging
 import re
 from typing import TYPE_CHECKING, Any, Generator
@@ -20,7 +21,7 @@ class OpenAIProvider:
     """
 
     def __init__(
-        self, api_key: str = "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"
+        self, api_key: str = os.environ["OPENAI_API_KEY"]
     ) -> None:
         self._api_key: str = api_key
 
