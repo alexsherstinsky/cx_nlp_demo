@@ -19,7 +19,6 @@ repos:
     rev: 'v0.0.271'
     hooks:
       - id: ruff
-        files: ^()
         args: ["--fix"]
 # https://pre-commit.ci/
 ci:
