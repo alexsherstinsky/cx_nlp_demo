@@ -1,6 +1,7 @@
 black[jupyter]==23.3.0
 datasets
 joblib
+mypy
 openai
 pandas
 pytest

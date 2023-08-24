@@ -32,7 +32,7 @@ class DataCleaner:
     def remove_nulls(self) -> None:
         self._dataframe.dropna(inplace=True)
 
-    def remove_non_printable_characters(self, column_names: list[str] | None, pattern: Pattern = r"[^\x00-\x7f]|[^\w\s]", replacement_character: str = " ") -> None:
+    def remove_non_printable_characters(self, column_names: list[str] | None, pattern: Pattern = re.compile(r"[^\x00-\x7f]|[^\w\s]"), replacement_character: str = " ") -> None:
         """
         Removes characters that do not appear "natural" when handled with print() method (default pattern is provided).
         If the column_names list is omitted, then all columns of the dataframe undergo non-printable character removal.
@@ -60,4 +60,3 @@ class DataCleaner:
 
     def convert_label_column_to_binary(self, threshold: int = 3) -> None:
         self._dataframe["label"] = self._dataframe["label"].apply(lambda x: 1 if x > threshold else 0)
-

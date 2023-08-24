@@ -19,7 +19,7 @@ extend_skip_glob = ['venv/*']
 
 [tool.mypy]
 python_version = "3.8"
-plugins = ["pydantic.mypy"]
+#plugins = ["pydantic.mypy"]
 files = [
 ]
 warn_unused_configs = true
@@ -41,10 +41,10 @@ disable_error_code = [
 exclude = [
 ]
 
-[[tool.mypy.overrides]]
-disable_error_code = [
-    'assignment',  # cannot assign NotImported to a ModuleType
-]
+#[[tool.mypy.overrides]]
+#disable_error_code = [
+#    'assignment',  # cannot assign NotImported to a ModuleType
+#]
 
 [tool.pydantic-mypy]
 # https://pydantic-docs.helpmanual.io/mypy_plugin/#plugin-settings

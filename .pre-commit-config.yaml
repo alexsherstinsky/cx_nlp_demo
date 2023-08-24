@@ -9,7 +9,7 @@ repos:
       - id: trailing-whitespace
       - id: requirements-txt-fixer
       - id: no-commit-to-branch
-        args: [--branch, develop, --branch, main]
+        args: [--branch, main]
       - id: detect-private-key
   - repo: https://github.com/psf/black
     rev: 23.3.0
@@ -19,4 +19,16 @@ repos:
     rev: 'v0.0.271'
     hooks:
       - id: ruff
+        files: ^()
         args: ["--fix"]
+# https://pre-commit.ci/
+ci:
+    autofix_commit_msg: |
+        [pre-commit.ci] auto fixes from pre-commit.com hooks
+
+        for more information, see https://pre-commit.ci
+    autofix_prs: false
+    autoupdate_branch: 'main'
+    autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+    autoupdate_schedule: monthly
+    submodules: false
