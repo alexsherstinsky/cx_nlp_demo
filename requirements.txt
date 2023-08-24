@@ -4,6 +4,7 @@ joblib
 mypy
 openai
 pandas
+pre-commit>=2.21.0
 pytest
 pytest_mock
 scikit-learn
