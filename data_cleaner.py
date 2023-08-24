@@ -64,6 +64,14 @@ class DataCleaner:
     def retain_numeric_rows_for_column(
         self, column_name: str, convert_to_int: bool = True
     ) -> None:
+        """
+        Filters the dataframe to retain only those rows, in which the value of the column_name can be parsed as numeric.
+        If the column_names list is omitted, then all columns of the dataframe undergo non-printable character removal.
+
+        Args:
+            column_name: column name of interest as the one whose values can be parsed as numeric.
+            convert_to_int: Directive for converting values of column_name in resulting rows to integer type formally.
+        """
         self._dataframe = self._dataframe[
             self._dataframe[column_name].apply(lambda x: x.isnumeric())
         ]
@@ -73,10 +81,25 @@ class DataCleaner:
     def create_standard_text_and_label_columns(
         self, source_text_column_name: str, source_label_column_name: str
     ) -> None:
+        """
+        Standard labels used by HuggingFace models are "text" and "label" for classifier operations.  While these
+        attribute names can be made customizable (HuggingFace API permit this), using standard names aides readability.
+
+        Args:
+            source_text_column_name: Column name in source dataset that should serve as the "text" column.
+            source_label_column_name: Column name in source dataset that should serve as the "label" column.
+        """
         self._dataframe["text"] = self._dataframe[source_text_column_name]
         self._dataframe["label"] = self._dataframe[source_label_column_name]
 
-    def convert_label_column_to_binary(self, threshold: int = 3) -> None:
+    def convert_label_column_to_binary(self, threshold: int) -> None:
+        # For binary classification purposes, convert 5-star "Rate" ("label") column entries to 0 and 1 (default threshold is 3; this can be experimented with in the future).
+        """
+        For binary classification, convert the integer-valued "label" column entries to 0 and 1 based on threshold.
+
+        Args:
+            threshold: Threshold value for producing binary labels if original label values are multi-valued.
+        """
         self._dataframe["label"] = self._dataframe["label"].apply(
             lambda x: 1 if x > threshold else 0
         )
