@@ -71,7 +71,7 @@ class FlipkartDemo:
             source_text_column_name="Summary", source_label_column_name="Rate"
         )
         # For binary classification purposes, convert 5-star "Rate" ("label") column entries to 0 and 1 (default threshold is 3; this can be experimented with in the future).
-        data_cleaner.convert_label_column_to_binary()
+        data_cleaner.convert_label_column_to_binary(threshold=3)
 
         # Partition the cleaned dataframe into train, test, and evaluation datasets.
         dataset_builder: DataPartitioner = DataPartitioner(
