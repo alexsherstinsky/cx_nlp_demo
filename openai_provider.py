@@ -20,7 +20,10 @@ class OpenAIProvider:
     It initializes the openai library with the api_key and provide a public get_sentiment() method to handle text input.
     """
 
-    def __init__(self, api_key: str = os.environ.get("OPENAI_API_KEY")) -> None:
+    def __init__(self, api_key: str | None = os.environ.get("OPENAI_API_KEY")) -> None:
+        if not api_key:
+            raise ValueError("OpenAI API_KEY is required.")
+
         self._api_key: str = api_key
 
     def get_sentiment(self, input_text: str) -> dict:
@@ -80,7 +83,7 @@ if the mood in the text is negative, not advising other users to get this produc
                 stop=None,
                 temperature=0.5,
             )
-            response_text: str = response.choices[0].message["content"].strip()
+            response_text: str = response.choices[0].message["content"].strip()  # type: ignore[union-attr]
             sentiment_match: re.Match[str] | None = re.search("0|1", response_text)
             sentiment: str | None
             if sentiment_match:

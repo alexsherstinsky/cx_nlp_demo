@@ -4,6 +4,8 @@ import logging
 
 import pandas as pd
 
+from datasets import Dataset, DatasetDict
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
@@ -25,29 +27,58 @@ class DataPartitioner:
     ) -> None:
         self._dataframe: pd.DataFrame = dataframe.copy()
 
+    def build_dataset_dict(
+        self,
+        num_train_samples: int = 8,
+        num_test_samples: int = 10,
+        num_evaluation_samples: int = 10,
+        random_state: int = DEFAULT_RANDOM_STATE,
+    ) -> DatasetDict:
         """
-        The order is important, since rows are deleted from the original dataframe upon every operation.  Hence, the
-        evaluation dataframe is obtained first, followed by obtaining the train and test dataframes (together).  These
-        operations must be performed in the constructor so that the property methods can return their results.
+        Construct a dictionary containing train, test, and evaluation datasets from the underlying dataframe source.
 
-        TODO: In the future, all these dataframes can be packaged into a frozen dataclass object and returned together.
+        This method prepares and organizes the dataset for model training, testing, and evaluation by following a
+        specific order of operations. It creates evaluation, train, and test dataframe, converts them into Dataset
+        objects, and packs them into a DatasetDict object.
+
+        Note:
+            The reason that the order of operations is important is because rows are deleted from the original dataframe
+            upon every operation.  Hence, the evaluation dataframe is obtained first, followed by obtaining the train
+            and test dataframes (together).
+
+        Args:
+            num_train_samples (int, optional): The number of samples to include in the train dataset. Default is 8.
+            num_test_samples (int, optional): The number of samples to include in the test dataset. Default is 10.
+            num_evaluation_samples (int, optional): The number of samples to include in the evaluation dataset. Default is 10.
+            random_state (int, optional): Seed for random number generation. Default is DEFAULT_RANDOM_STATE.
+
+        Returns:
+            DatasetDict: A dictionary containing "train", "test', and "eval" datasets.
         """
-        self._dataframe_evaluation: pd.DataFrame = self._get_evaluation_dataframe()
 
-        self._dataframe_train: pd.DataFrame
-        self._dataframe_test: pd.DataFrame
+        df_eval: pd.DataFrame = self._get_evaluation_dataframe(
+            num_samples=num_evaluation_samples, random_state=random_state
+        )
+        df_train: pd.DataFrame
+        df_test: pd.DataFrame
         (
-            self._dataframe_train,
-            self._dataframe_test,
-        ) = self._get_train_and_test_dataframes()
-
-    @property
-    def evaluation_dataframe(self) -> pd.DataFrame:
-        return self._dataframe_evaluation
-
-    @property
-    def train_and_test_dataframes(self) -> tuple[pd.DataFrame, pd.DataFrame]:
-        return self._dataframe_train, self._dataframe_test
+            df_train,
+            df_test,
+        ) = self._get_train_and_test_dataframes(
+            num_train_samples=num_train_samples,
+            num_test_samples=num_test_samples,
+            random_state=random_state,
+        )
+        train_ds: Dataset = Dataset.from_pandas(df_train, preserve_index=False)
+        test_ds: Dataset = Dataset.from_pandas(df_test, preserve_index=False)
+        eval_ds: Dataset = Dataset.from_pandas(df_eval, preserve_index=False)
+        return DatasetDict(
+            {
+                "train": train_ds,
+                "test": test_ds,
+                "eval": eval_ds,
+            }
+        )
 
     def _get_evaluation_dataframe(
         self, num_samples: int = 10, random_state: int = DEFAULT_RANDOM_STATE
@@ -66,27 +97,27 @@ class DataPartitioner:
         num_test_samples: int = 10,
         random_state: int = DEFAULT_RANDOM_STATE,
     ) -> tuple[pd.DataFrame, pd.DataFrame]:
-        # Separate negatives and positives into their own dataframes.
+        # Split negatives and positives into separate dataframes (assumes binary labels with 0 and 1 integer values).
         df_negatives: pd.DataFrame = self._dataframe[self._dataframe["label"] == 0]
         df_positives: pd.DataFrame = self._dataframe.drop(df_negatives.index)
 
         df_train_negatives: pd.DataFrame = df_negatives.sample(
             n=num_train_samples, random_state=random_state
         )
-        df_negatives: pd.DataFrame = df_negatives.drop(df_train_negatives.index)
+        df_negatives = df_negatives.drop(df_train_negatives.index)
 
         df_train_positives: pd.DataFrame = df_positives.sample(
             n=num_train_samples, random_state=random_state
         )
-        df_positives: pd.DataFrame = df_positives.drop(df_train_positives.index)
+        df_positives = df_positives.drop(df_train_positives.index)
 
         df_train: pd.DataFrame = pd.concat([df_train_negatives, df_train_positives])
 
-        df_test_negatives: pd.DataFrame = df_negatives.sample(
+        df_test_negatives = df_negatives.sample(
             n=num_test_samples, random_state=random_state
         )
 
-        df_test_positives: pd.DataFrame = df_positives.sample(
+        df_test_positives = df_positives.sample(
             n=num_test_samples, random_state=random_state
         )
 

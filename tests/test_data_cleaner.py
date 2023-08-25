@@ -4,20 +4,6 @@ import pytest
 from data_cleaner import DataCleaner
 
 
-@pytest.fixture()
-def df_pandas_with_nulls():
-    test_df: pd.DataFrame = pd.DataFrame(data={"col1": [1, None], "col2": [2, 3]})
-    return test_df
-
-
-@pytest.fixture()
-def df_pandas_with_non_printable_characters() -> pd.DataFrame:
-    test_df = pd.DataFrame(
-        data={"col1": ["Déjà vu", "test123"], "col2": ["Ò|zz", "test 456"]}
-    )
-    return test_df
-
-
 @pytest.mark.unit
 def test_remove_non_printable_characters(
     df_pandas_with_non_printable_characters: pd.DataFrame,

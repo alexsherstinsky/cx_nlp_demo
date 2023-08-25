@@ -25,15 +25,15 @@ class SetFitModelProvider:
     def __init__(
         self,
         model_name: str,
-        df_train: pd.DataFrame,
-        df_test: pd.DataFrame,
+        train_ds: Dataset,
+        test_ds: Dataset,
         selection_range: range | None = None,
         pretrained_model_name: str = "sentence-transformers/paraphrase-mpnet-base-v2",
         shuffle_seed: int = 42,
     ) -> None:
         self._model_name: str = model_name
-        self._df_train: pd.DataFrame = df_train
-        self._df_test: pd.DataFrame = df_test
+        self._train_ds: Dataset = train_ds
+        self._test_ds: Dataset = test_ds
         self._selection_range: range | None = selection_range
         self._pretrained_model_name: str = pretrained_model_name
         self._shuffle_seed: int = shuffle_seed
@@ -51,7 +51,7 @@ class SetFitModelProvider:
 
         train_ds: Dataset
         test_ds: Dataset
-        train_ds, test_ds = self._get_train_and_test_datasets()
+        train_ds, test_ds = self._randomize_train_and_test_datasets()
 
         # TODO (8/18/2023): <Alex>The arguments loss_class, batch_size, num_iterations, and num_epochs can be made customizable in the future.</Alex>
         trainer = SetFitTrainer(
@@ -131,13 +131,9 @@ class SetFitModelProvider:
 
         return self._trainer.model.predict([text])[0]
 
-    def _get_train_and_test_datasets(self) -> tuple[Dataset, Dataset]:
-        train_ds: Dataset = Dataset.from_pandas(
-            self._df_train, preserve_index=False
-        ).shuffle(seed=self._shuffle_seed)
-        test_ds: Dataset = Dataset.from_pandas(
-            self._df_test, preserve_index=False
-        ).shuffle(seed=self._shuffle_seed)
+    def _randomize_train_and_test_datasets(self) -> tuple[Dataset, Dataset]:
+        train_ds: Dataset = self._train_ds.shuffle(seed=self._shuffle_seed)
+        test_ds: Dataset = self._test_ds.shuffle(seed=self._shuffle_seed)
 
         if self._selection_range is not None:
             train_ds = train_ds.select(self._selection_range)
