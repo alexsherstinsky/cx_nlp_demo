@@ -1,14 +1,26 @@
 from __future__ import annotations
 
+import pandas as pd
 import logging
 import re
-from typing import TYPE_CHECKING, Pattern
-
-if TYPE_CHECKING:
-    import pandas as pd
+from typing import TypeVar, Pattern
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
+
+
+T = TypeVar("T")
+
+
+def _is_int_or_parseable_as_int(value: T) -> bool:
+    if isinstance(value, int):
+        return True
+
+    try:
+        _ = int(value)
+        return True
+    except (ValueError, TypeError):
+        return False
 
 
 class DataCleaner:
@@ -73,7 +85,9 @@ class DataCleaner:
             convert_to_int: Directive for converting values of column_name in resulting rows to integer type formally.
         """
         self._dataframe = self._dataframe[
-            self._dataframe[column_name].apply(lambda x: x.isnumeric())
+            self._dataframe[column_name].apply(
+                lambda x: _is_int_or_parseable_as_int(value=x)
+            )
         ]
         if convert_to_int:
             self._dataframe[column_name] = self._dataframe[column_name].astype("int")
