@@ -93,7 +93,6 @@ class DataCleaner:
         self._dataframe["label"] = self._dataframe[source_label_column_name]
 
     def convert_label_column_to_binary(self, threshold: int) -> None:
-        # For binary classification purposes, convert 5-star "Rate" ("label") column entries to 0 and 1 (default threshold is 3; this can be experimented with in the future).
         """
         For binary classification, convert the integer-valued "label" column entries to 0 and 1 based on threshold.
 

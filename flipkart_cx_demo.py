@@ -5,6 +5,7 @@ import logging
 import pathlib
 
 import pandas as pd
+from datasets import DatasetDict, Dataset
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
 from data_cleaner import DataCleaner
@@ -74,22 +75,24 @@ class FlipkartDemo:
         data_cleaner.convert_label_column_to_binary(threshold=3)
 
         # Partition the cleaned dataframe into train, test, and evaluation datasets.
-        dataset_builder: DataPartitioner = DataPartitioner(
+        data_partitioner: DataPartitioner = DataPartitioner(
             dataframe=data_cleaner.dataframe
         )
+        dataset_dict: DatasetDict = (
+            data_partitioner.build_dataset_dict()
+        )  # using default arguments (can be customized)
 
         # Obtain train and test datasets (non-overlapping parts of the overall cleaned dataframe).
-        df_train: pd.DataFrame
-        df_test: pd.DataFrame
-        df_train, df_test = dataset_builder.train_and_test_dataframes
+        train_ds: Dataset = dataset_dict["train"]
+        test_ds: Dataset = dataset_dict["test"]
 
         # Train the SetFit model, unless that has already been done and the model file exists on the local filesystem.
         model_name: str = "my-test-setfit-model"
 
         set_fit_model_provider: SetFitModelProvider = SetFitModelProvider(
             model_name=model_name,
-            df_train=df_train,
-            df_test=df_test,
+            train_ds=train_ds,
+            test_ds=test_ds,
             selection_range=range(8 * 2),
         )
 
@@ -103,7 +106,8 @@ class FlipkartDemo:
             set_fit_model_provider.persist_model()
 
         # Obtain evaluation dataset (non-overlapping with train and test datasets part of the overall cleaned dataframe).
-        df_evaluation: pd.DataFrame = dataset_builder.evaluation_dataframe
+        eval_ds: Dataset = dataset_dict["eval"]
+        df_evaluation: pd.DataFrame = eval_ds.to_pandas()
 
         # Use the SetFit model to predict.
         df_evaluation["setfit"] = df_evaluation["text"].apply(
@@ -157,8 +161,8 @@ if __name__ == "__main__":
     import sys
 
     # TODO: <Alex>ALEX-Cleanup</Alex>
-    # Obtain data file (stored in CSV format) from command line.
-    csv_file_path_str: str = sys.argv[1] if len(sys.argv) >= 2 else None
+    # Obtain data file (stored in CSV format) from command line.  Use CLI() library
+    csv_file_path_str: str = sys.argv[1]
     # TODO: <Alex>ALEX</Alex>
     flipkart_demo = FlipkartDemo()
 
