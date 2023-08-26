@@ -146,3 +146,18 @@ def test_create_standard_text_and_label_columns(
         }
     )
     pd.testing.assert_frame_equal(data_cleaner.dataframe, expected_df)
+
+
+@pytest.mark.unit
+def test_convert_label_column_to_binary(
+    df_pandas_with_integer_labels: pd.DataFrame,
+    df_pandas_with_binary_labels: pd.DataFrame,
+):
+    data_cleaner = DataCleaner(dataframe=df_pandas_with_integer_labels)
+    data_cleaner.convert_label_column_to_binary(threshold=3)
+
+    """
+    This assertion shows that the values in the "label" column are the integers 0 and 1 (only).
+    """
+    expected_df: pd.DataFrame = df_pandas_with_binary_labels
+    pd.testing.assert_frame_equal(data_cleaner.dataframe, expected_df)
