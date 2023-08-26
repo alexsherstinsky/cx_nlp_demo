@@ -43,7 +43,7 @@ def test_remove_non_printable_characters(
             pd.DataFrame(
                 data={
                     "text": ["abc", "xyz"],
-                    "label": [0, 1],
+                    "label": [2, 4],
                 }
             ),
             id="all_rows_retained_integers",
@@ -54,7 +54,7 @@ def test_remove_non_printable_characters(
             pd.DataFrame(
                 data={
                     "text": ["abc", "xyz"],
-                    "label": [0, 1],
+                    "label": [2, 4],
                 }
             ),
             id="all_rows_retained_integers_noop_conversion",
@@ -65,7 +65,7 @@ def test_remove_non_printable_characters(
             pd.DataFrame(
                 data={
                     "text": ["abc", "xyz"],
-                    "label": ["0", 1],
+                    "label": ["0", 3],
                 }
             ),
             id="all_rows_retained_parseable",
@@ -76,7 +76,7 @@ def test_remove_non_printable_characters(
             pd.DataFrame(
                 data={
                     "text": ["abc", "xyz"],
-                    "label": [0, 1],
+                    "label": [0, 3],
                 }
             ),
             id="all_rows_retained_parseable_with_conversion",
@@ -121,5 +121,28 @@ def test_retain_numeric_rows_for_column(
     data_cleaner = DataCleaner(dataframe=df_test)
     data_cleaner.retain_numeric_rows_for_column(
         column_name="label", convert_to_int=convert_to_int
+    )
+    pd.testing.assert_frame_equal(data_cleaner.dataframe, expected_df)
+
+
+@pytest.mark.unit
+def test_create_standard_text_and_label_columns(
+    df_pandas_with_text_and_integer_columns: pd.DataFrame,
+):
+    data_cleaner = DataCleaner(dataframe=df_pandas_with_text_and_integer_columns)
+    data_cleaner.create_standard_text_and_label_columns(
+        source_text_column_name="col1", source_label_column_name="col2"
+    )
+
+    """
+    This assertion shows that the new "text" and "label" columns are present in processed dataframe.
+    """
+    expected_df: pd.DataFrame = pd.DataFrame(
+        data={
+            "col1": ["abc", "xyz"],
+            "col2": [2, 4],
+            "text": ["abc", "xyz"],
+            "label": [2, 4],
+        }
     )
     pd.testing.assert_frame_equal(data_cleaner.dataframe, expected_df)

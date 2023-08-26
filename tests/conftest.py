@@ -4,6 +4,12 @@ from datasets import Dataset
 
 
 @pytest.fixture()
+def df_pandas_with_text_and_integer_columns():
+    test_df: pd.DataFrame = pd.DataFrame(data={"col1": ["abc", "xyz"], "col2": [2, 4]})
+    return test_df
+
+
+@pytest.fixture()
 def df_pandas_with_nulls():
     test_df: pd.DataFrame = pd.DataFrame(data={"col1": [1, None], "col2": [2, 3]})
     return test_df
@@ -18,7 +24,7 @@ def df_pandas_with_non_printable_characters() -> pd.DataFrame:
 
 
 @pytest.fixture()
-def df_pandas_with_integer_labels() -> pd.DataFrame:
+def df_pandas_with_binary_labels() -> pd.DataFrame:
     test_df: pd.DataFrame = pd.DataFrame(
         data={
             "text": ["abc", "xyz"],
@@ -29,11 +35,22 @@ def df_pandas_with_integer_labels() -> pd.DataFrame:
 
 
 @pytest.fixture()
+def df_pandas_with_integer_labels() -> pd.DataFrame:
+    test_df: pd.DataFrame = pd.DataFrame(
+        data={
+            "text": ["abc", "xyz"],
+            "label": [2, 4],
+        }
+    )
+    return test_df
+
+
+@pytest.fixture()
 def df_pandas_with_numeric_parseable_labels() -> pd.DataFrame:
     test_df: pd.DataFrame = pd.DataFrame(
         data={
             "text": ["abc", "xyz"],
-            "label": ["0", 1],
+            "label": ["0", 3],
         }
     )
     return test_df
