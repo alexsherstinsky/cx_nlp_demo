@@ -157,7 +157,7 @@ def test_convert_label_column_to_binary(
     data_cleaner.convert_label_column_to_binary(threshold=3)
 
     """
-    This assertion shows that the values in the "label" column are the integers 0 and 1 (only).
+    This assertion shows that only the integers 0 and 1 appear in the "label" column in processed dataframe.
     """
     expected_df: pd.DataFrame = df_pandas_with_binary_labels
     pd.testing.assert_frame_equal(data_cleaner.dataframe, expected_df)
