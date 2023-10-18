@@ -46,7 +46,7 @@ class DataCleaner:
 
     def remove_non_printable_characters(
         self,
-        column_names: list[str] | None,
+        column_names: list[str] | None = None,
         pattern: Pattern = re.compile(r"[^\x00-\x7f]|[^\w\s]"),
         replacement_character: str = " ",
     ) -> None:
@@ -78,7 +78,6 @@ class DataCleaner:
     ) -> None:
         """
         Filters the dataframe to retain only those rows, in which the value of the column_name can be parsed as numeric.
-        If the column_names list is omitted, then all columns of the dataframe undergo non-printable character removal.
 
         Args:
             column_name: column name of interest as the one whose values can be parsed as numeric.
