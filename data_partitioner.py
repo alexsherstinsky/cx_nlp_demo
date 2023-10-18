@@ -42,9 +42,9 @@ class DataPartitioner:
         objects, and packs them into a DatasetDict object.
 
         Note:
-            The reason that the order of operations is important is because rows are deleted from the original dataframe
-            upon every operation.  Hence, the evaluation dataframe is obtained first, followed by obtaining the train
-            and test dataframes (together).
+            The order of operations is important, because rows are deleted from the original dataframe upon every
+            operation.  Hence, the evaluation dataframe is obtained first (to minimize the risk of information leakage),
+            followed by obtaining the train and test dataframes (together).
 
         Args:
             num_train_samples (int, optional): The number of samples to include in the train dataset. Default is 8.
