@@ -41,7 +41,9 @@ class SetFitModelProvider:
             selection_range=selection_range,
         )
 
-        model: SetFitModel = SetFitModel.from_pretrained(pretrained_model_name)
+        model: SetFitModel = SetFitModel.from_pretrained(
+            pretrained_model_name_or_path=pretrained_model_name
+        )
         # TODO (8/18/2023): <Alex>The arguments loss_class, batch_size, num_iterations, and num_epochs can be made customizable in the future.</Alex>
         self._trainer: SetFitTrainer = SetFitTrainer(
             model=model,
